@@ -13,27 +13,50 @@ public class TripsService : ITripsService
     public async Task<List<TripDTO>> GetTripsAsync()
     {
         var trips = new List<TripDTO>();
-        var query = "SELECT IdTrip, Name, DateFrom, DateTo, maxPeople FROM Trip";
+        const string query = @"
+        SELECT 
+            t.IdTrip, t.Name, t.DateFrom, t.DateTo, t.MaxPeople,
+            c.Name AS CountryName
+        FROM Trip t
+        LEFT JOIN Country_Trip ct ON t.IdTrip = ct.IdTrip
+        LEFT JOIN Country c ON ct.IdCountry = c.IdCountry
+        ORDER BY t.IdTrip
+    ";
 
         using var conn = new SqlConnection(_connectionString);
         using var cmd = new SqlCommand(query, conn);
         await conn.OpenAsync();
+
         using var reader = await cmd.ExecuteReaderAsync();
+
+        Dictionary<int, TripDTO> tripMap = new();
 
         while (await reader.ReadAsync())
         {
-            trips.Add(new TripDTO
+            int idTrip = reader.GetInt32(0);
+
+            if (!tripMap.ContainsKey(idTrip))
             {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                DateFrom = reader.GetDateTime(2),
-                DateTo = reader.GetDateTime(3),
-                MaxPeople = reader.GetInt32(4)
-            });
+                tripMap[idTrip] = new TripDTO
+                {
+                    Id = idTrip,
+                    Name = reader.GetString(1),
+                    DateFrom = reader.GetDateTime(2),
+                    DateTo = reader.GetDateTime(3),
+                    MaxPeople = reader.GetInt32(4),
+                    Countries = new List<string>()
+                };
+            }
+
+            if (!reader.IsDBNull(5))
+            {
+                tripMap[idTrip].Countries.Add(reader.GetString(5));
+            }
         }
 
-        return trips;
+        return tripMap.Values.ToList();
     }
+
 
     public async Task<bool> DoesTripExistAsync(int idTrip)
     {

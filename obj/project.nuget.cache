@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "W+pklOlYMkI=",
+  "dgSpecHash": "6y79s2PHyTM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ogrod\\Desktop\\Tutorial8\\Tutorial8.csproj",
+  "projectFilePath": "C:\\Users\\ogrod\\Desktop\\PJATK\\APBD\\Projektcw8\\Tutorial8.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ogrod\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\ogrod\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -6775,11 +6775,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ogrod\\Desktop\\Tutorial8\\Tutorial8.csproj",
+      "projectUniqueName": "C:\\Users\\ogrod\\Desktop\\PJATK\\APBD\\Projektcw8\\Tutorial8.csproj",
       "projectName": "Tutorial8",
-      "projectPath": "C:\\Users\\ogrod\\Desktop\\Tutorial8\\Tutorial8.csproj",
+      "projectPath": "C:\\Users\\ogrod\\Desktop\\PJATK\\APBD\\Projektcw8\\Tutorial8.csproj",
       "packagesPath": "C:\\Users\\ogrod\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ogrod\\Desktop\\Tutorial8\\obj\\",
+      "outputPath": "C:\\Users\\ogrod\\Desktop\\PJATK\\APBD\\Projektcw8\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ogrod\\AppData\\Roaming\\NuGet\\NuGet.Config"
