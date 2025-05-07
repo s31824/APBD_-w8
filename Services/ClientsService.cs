@@ -97,13 +97,20 @@ public class ClientsService : IClientsService
 
     public async Task<List<TripDTO>> GetTripsForClientAsync(int idClient)
     {
-        var trips = new List<TripDTO>();
+        var result = new List<TripDTO>();
+
         const string query = @"
-            SELECT t.IdTrip, t.Name, t.DateFrom, t.DateTo, t.maxPeople
-            FROM Trip t
-            JOIN Client_Trip ct ON ct.IdTrip = t.IdTrip
-            WHERE ct.IdClient = @IdClient
-        ";
+        SELECT 
+            t.IdTrip, t.Name, t.Description, t.DateFrom, t.DateTo, t.MaxPeople,
+            ct.RegisteredAt, ct.PaymentDate,
+            c.Name AS CountryName
+        FROM Trip t
+        JOIN Client_Trip ct ON ct.IdTrip = t.IdTrip
+        LEFT JOIN Country_Trip ctr ON ctr.IdTrip = t.IdTrip
+        LEFT JOIN Country c ON ctr.IdCountry = c.IdCountry
+        WHERE ct.IdClient = @IdClient
+        ORDER BY t.IdTrip
+    ";
 
         using var conn = new SqlConnection(_connectionString);
         using var cmd = new SqlCommand(query, conn);
@@ -111,19 +118,50 @@ public class ClientsService : IClientsService
         await conn.OpenAsync();
 
         using var reader = await cmd.ExecuteReaderAsync();
+
+        var tripMap = new Dictionary<int, TripDTO>();
+
         while (await reader.ReadAsync())
         {
-            trips.Add(new TripDTO
+            int idTrip = reader.GetInt32(0);
+
+            if (!tripMap.ContainsKey(idTrip))
             {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                DateFrom = reader.GetDateTime(2),
-                DateTo = reader.GetDateTime(3),
-                MaxPeople = reader.GetInt32(4),
-            });
+                int rawRegisteredAt = reader.GetInt32(6);
+                int? rawPaymentDate = reader.IsDBNull(7) ? null : reader.GetInt32(7);
+                
+                tripMap[idTrip] = new TripDTO
+                {
+                    Id= idTrip,
+                    Name = reader.GetString(1),
+                    Description = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    DateFrom = reader.GetDateTime(3),
+                    DateTo = reader.GetDateTime(4),
+                    MaxPeople = reader.GetInt32(5),
+                    RegisteredAt = ParseIntDateToDateTime(rawRegisteredAt),
+                    PaymentDate = rawPaymentDate.HasValue ? ParseIntDateToDateTime(rawPaymentDate.Value) : null,
+                    Countries = new List<string>()
+                };
+            }
+
+            if (!reader.IsDBNull(8))
+            {
+                tripMap[idTrip].Countries.Add(reader.GetString(8));
+            }
         }
 
-        return trips;
+        return tripMap.Values.ToList();
     }
-    
+
+    private DateTime ParseIntDateToDateTime(int intDate)
+    {
+        
+        var str = intDate.ToString();
+        return new DateTime(
+            int.Parse(str.Substring(0, 4)),
+            int.Parse(str.Substring(4, 2)),
+            int.Parse(str.Substring(6, 2))
+        );
+    }
+
 }

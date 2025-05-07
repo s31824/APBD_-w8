@@ -502,3 +502,4 @@ C:\Users\ogrod\Desktop\PJATK\APBD\Projektcw8\obj\Debug\net9.0\refint\Tutorial8.d
 C:\Users\ogrod\Desktop\PJATK\APBD\Projektcw8\obj\Debug\net9.0\Tutorial8.pdb
 C:\Users\ogrod\Desktop\PJATK\APBD\Projektcw8\obj\Debug\net9.0\Tutorial8.genruntimeconfig.cache
 C:\Users\ogrod\Desktop\PJATK\APBD\Projektcw8\obj\Debug\net9.0\ref\Tutorial8.dll
+C:\Users\ogrod\Desktop\PJATK\APBD\Projektcw8\obj\Debug\net9.0\Tutorial8.sourcelink.json
